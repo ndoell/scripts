@@ -1,6 +1,0 @@
-# Ignore all output files.
-data/*
-loot/*
-
-# Ignore notify config file.
-*provider-config.yaml
