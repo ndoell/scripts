@@ -1,0 +1,83 @@
+services:
+  recon:
+    image: "recon/subcollector"
+    build: ./subcollector
+    volumes:
+      - ./data/:/data/
+      - ./setup:/setup/
+    depends_on:
+      subfinder:
+        condition: service_completed_successfully
+      findomain:
+        condition: service_completed_successfully
+      assetfinder:
+        condition: service_completed_successfully
+      #amass:
+      #  condition: service_completed_successfully
+  subfinder:
+    image: "projectdiscovery/subfinder"
+    volumes:
+      - ./data/:/data/
+      - ./setup:/setup/
+    command: '-t 20 -dL /setup/wildcards -silent -o /data/subfinder.subs'
+  findomain:
+    image: "edu4rdshl/findomain"
+    volumes:
+      - ./data/:/data/
+      - ./setup:/setup/
+    command: '-q -f /setup/wildcards -u /data/findomain.subs'
+  assetfinder:
+    image: recon/assetfinder
+    build: ./assetfinder
+    volumes:
+      - ./data/:/data/
+      - ./setup:/setup/
+  #amass:
+  #  image: "caffix/amass"
+  #  volumes:
+  #    - ./data/:/data/
+  #  command: 'enum -brute -df /setup/wildcards -o /data/amass.subs'    
+   
+  crawl:
+    image: "recon/crawlcollector"
+    build: ./crawlcollector
+    volumes:
+      - ./data/:/data/
+      - ./setup:/setup/
+    depends_on:
+      katana:
+        condition: service_completed_successfully
+  katana:
+    image: "projectdiscovery/katana:latest"
+    volumes:
+      - ./data/:/data/
+      - ./setup:/setup/
+    # -hl/-headless flag kept failing in container.
+    command: '-list /data/combined.hosts -jc -kf all -sc -o /data/katana.crawl -silent -nc'
+    depends_on:
+      recon:
+        condition: service_completed_successfully
+
+  trufflehog:
+    image: "recon/trufflehog"
+    build: ./trufflehog
+    volumes:
+      - ./data/httpxout/:/treasure/
+      - ./loot/:/loot/
+    # TF does not have write to file option, the below will not write to a host file.
+    #command: 'filesystem /treasure --only-verified -j > /loot/trufflehog.loot'
+  semgrep:
+    image: "semgrep/semgrep"
+    volumes:
+      - ./data/httpxout/:/treasure/
+      - ./loot/:/loot/
+    command: 'semgrep scan --config=auto --dataflow-traces --sarif /treasure -o /loot/semgrep.sarif'
+    #command: 'semgrep scan --config "p/secrets" /treasure -o /loot/semgrep_secrets.loot'
+  npm_dependencies:
+    image: "recon/npm_dependencies"
+    build: ./npm_dependencies
+    volumes:
+      - ./data/httpxout/:/treasure/
+      - ./loot/:/loot/
+    command: './find_npm_dependencies.sh treasure loot'
+    

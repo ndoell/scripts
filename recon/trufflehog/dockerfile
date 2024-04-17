@@ -1,0 +1,6 @@
+FROM trufflesecurity/trufflehog
+
+COPY trufflehog.sh trufflehog.sh
+RUN chmod 744 trufflehog.sh
+
+ENTRYPOINT ["./trufflehog.sh"]

@@ -1,0 +1,8 @@
+FROM golang:alpine
+
+RUN go install github.com/tomnomnom/assetfinder@latest
+
+COPY assetfinder.sh assetfinder.sh
+RUN chmod 744 assetfinder.sh
+
+CMD ["./assetfinder.sh"]

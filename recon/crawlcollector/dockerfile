@@ -1,0 +1,13 @@
+FROM golang:alpine
+
+ENV GO111MODULE=on
+
+RUN go install github.com/tomnomnom/anew@latest \
+    && go install github.com/projectdiscovery/notify/cmd/notify@latest \
+    && go install github.com/projectdiscovery/httpx/cmd/httpx@latest \
+    && go install github.com/lc/subjs@latest
+
+COPY collector.sh collector.sh
+RUN chmod 744 collector.sh
+
+CMD ["./collector.sh"]

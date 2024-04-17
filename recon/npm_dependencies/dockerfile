@@ -1,0 +1,7 @@
+FROM bash:latest
+
+COPY find_npm_dependencies.sh find_npm_dependencies.sh
+RUN chmod 744 find_npm_dependencies.sh
+
+# Takes 2 inputs. `find_npm_dependencies.sh <input> <output>`
+CMD ["/bin/bash"]

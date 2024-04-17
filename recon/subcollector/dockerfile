@@ -1,0 +1,9 @@
+FROM golang:alpine
+
+RUN go install github.com/tomnomnom/anew@latest \
+    && go install github.com/projectdiscovery/notify/cmd/notify@latest
+
+COPY collector.sh collector.sh
+RUN chmod 744 collector.sh
+
+CMD ["./collector.sh"]
