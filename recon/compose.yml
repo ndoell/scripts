@@ -57,7 +57,7 @@ services:
     depends_on:
       recon:
         condition: service_completed_successfully
-
+  
   trufflehog:
     image: "recon/trufflehog"
     build: ./trufflehog

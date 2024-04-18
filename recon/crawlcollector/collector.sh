@@ -1,10 +1,7 @@
 #!/bin/sh
 
 cd /data
-#cat katana.crawl | anew combined_links.out
-#cat findomain.out | anew combined_domains.subs
-#cat assetfinder.out | anew combined_domains.subs
-#cat amass.out | anew combined_domains.subs
+
 cat *.crawl | anew combined.crawl
 
 # remove images, fonts, pdf.
@@ -25,4 +22,6 @@ httpx -mc 200 -l combined_clean.crawl -srd httpxout -fr -silent -nc
 # Send output to slack.
 # If you want to get DOS'd
 #notify -silent -provider slack -provider-config /data/notify/provider-config.yaml -data domains.out -bulk
-echo "Crawl Job Complete" | notify -silent -provider slack -provider-config /setup/provider-config.yaml
+if [ -f /setup/provider-config.yaml ]; then
+    echo "Crawl Job Complete" | notify -silent -provider slack -provider-config /setup/provider-config.yaml
+fi

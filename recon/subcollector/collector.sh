@@ -14,4 +14,6 @@ cat combined.subs | sed -e 's/*.//' combined.subs | sed -e 's#^#https://#' > com
 # Send output to slack.
 # If you want to get DOS'd
 #notify -silent -provider slack -provider-config /data/notify/provider-config.yaml -data domains.out -bulk
-echo "Recon Job Complete" | notify -silent -provider slack -provider-config /setup/provider-config.yaml
+if [ -f /setup/provider-config.yaml ]; then
+    echo "Recon Job Complete" | notify -silent -provider slack -provider-config /setup/provider-config.yaml
+fi
