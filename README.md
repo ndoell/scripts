@@ -14,7 +14,7 @@ Ensure Docker and Docker Compose are installed on your system. You can download 
 To set up the project, follow these steps:
 1. Clone the repository to your local machine:
    ```bash
-   git clone https://github.com/10gen/security-compose.git
+   git clone https://github.com/ndoell/scripts.git
    ```
 2. Navigate to the cloned directory:
     ```bash
